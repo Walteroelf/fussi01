@@ -2,63 +2,85 @@
 <html lang="de">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>Fußball-Mathe</title>
 
   <style>
     :root {
-      --green: #1f8f4d;
-      --dark: #153b2b;
-      --light: #f4fff8;
-      --yellow: #ffd84d;
-      --red: #e85d5d;
-      --blue: #3b82f6;
-      --gray: #e8efe9;
-      --text: #1f2937;
+      --bg: #f5f6f2;
+      --card: #ffffff;
+      --text: #1f2933;
+      --muted: #6b7280;
+      --line: #d9ded6;
+      --green: #2f6f4e;
+      --green-soft: #e8f3ec;
+      --blue-soft: #eef4fb;
+      --yellow-soft: #fff7df;
+      --red-soft: #fdecec;
+      --button: #eef0eb;
+      --button-dark: #2f6f4e;
     }
 
     * {
       box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html,
+    body {
+      margin: 0;
+      min-height: 100%;
+      background: var(--bg);
+      color: var(--text);
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
 
     body {
-      margin: 0;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: linear-gradient(180deg, #eafff1, #ffffff);
-      color: var(--text);
-      min-height: 100vh;
       display: flex;
       justify-content: center;
     }
 
     .app {
       width: 100%;
-      max-width: 900px;
-      padding: 18px;
+      max-width: 1024px;
+      min-height: 100svh;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .screen {
+      display: none;
+      flex: 1;
+    }
+
+    .screen.active {
+      display: flex;
+      flex-direction: column;
     }
 
     .card {
-      background: white;
+      background: var(--card);
+      border: 2px solid var(--line);
       border-radius: 28px;
-      padding: 22px;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.08);
-      border: 3px solid #d7f2df;
+      padding: 28px;
+      flex: 1;
     }
 
     header {
-      text-align: center;
-      margin-bottom: 16px;
+      margin-bottom: 18px;
     }
 
     h1 {
-      margin: 8px 0;
-      font-size: clamp(2rem, 6vw, 3.2rem);
+      margin: 0;
+      font-size: clamp(2.1rem, 5vw, 3.4rem);
+      line-height: 1.1;
       color: var(--green);
     }
 
     h2 {
-      font-size: clamp(1.5rem, 4vw, 2.1rem);
-      margin: 8px 0 18px;
+      margin: 0 0 18px;
+      font-size: clamp(1.5rem, 3.5vw, 2.2rem);
     }
 
     p {
@@ -67,178 +89,281 @@
     }
 
     .subtitle {
-      font-size: 1.2rem;
-      color: #446052;
-      margin-top: 0;
-    }
-
-    .screen {
-      display: none;
-    }
-
-    .screen.active {
-      display: block;
-    }
-
-    .menu-grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 16px;
-      margin-top: 18px;
-    }
-
-    @media (min-width: 700px) {
-      .menu-grid {
-        grid-template-columns: repeat(3, 1fr);
-      }
+      margin: 8px 0 0;
+      font-size: 1.25rem;
+      color: var(--muted);
     }
 
     button {
-      font: inherit;
-      border: none;
-      cursor: pointer;
+      border: 0;
       border-radius: 22px;
+      background: var(--button);
+      color: var(--text);
       min-height: 64px;
       padding: 14px 18px;
+      font: inherit;
       font-size: 1.25rem;
-      font-weight: 700;
-      color: var(--text);
-      background: var(--gray);
-      transition: transform 0.08s ease, box-shadow 0.08s ease;
+      font-weight: 750;
+      cursor: pointer;
       touch-action: manipulation;
     }
 
     button:active {
-      transform: scale(0.97);
-    }
-
-    .big-button {
-      min-height: 130px;
-      font-size: 1.4rem;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
+      transform: scale(0.98);
     }
 
     .primary {
-      background: var(--green);
+      background: var(--button-dark);
       color: white;
     }
 
-    .yellow {
-      background: var(--yellow);
+    .soft-green {
+      background: var(--green-soft);
     }
 
-    .blue {
-      background: var(--blue);
-      color: white;
+    .soft-blue {
+      background: var(--blue-soft);
     }
 
-    .red {
-      background: var(--red);
-      color: white;
+    .soft-yellow {
+      background: var(--yellow-soft);
     }
 
     .small {
       min-height: 48px;
-      padding: 10px 14px;
-      font-size: 1rem;
       border-radius: 16px;
+      font-size: 1rem;
+      padding: 10px 14px;
+    }
+
+    .menu-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    @media (max-width: 720px) {
+      .menu-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .menu-button {
+      min-height: 132px;
+      text-align: left;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .menu-icon {
+      font-size: 2.1rem;
+      line-height: 1;
+    }
+
+    .menu-title {
+      font-size: 1.45rem;
+      font-weight: 850;
+    }
+
+    .menu-sub {
+      color: var(--muted);
+      font-size: 1rem;
+      font-weight: 650;
     }
 
     .topbar {
       display: flex;
-      justify-content: space-between;
       align-items: center;
-      gap: 10px;
-      margin-bottom: 14px;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 18px;
       flex-wrap: wrap;
+    }
+
+    .badge-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
     }
 
     .badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      background: #eefbf2;
-      border: 2px solid #ccebd5;
-      padding: 10px 14px;
+      background: #f3f4f0;
+      border: 1px solid var(--line);
       border-radius: 999px;
-      font-weight: 700;
+      padding: 9px 14px;
       font-size: 1rem;
+      font-weight: 750;
+      color: var(--text);
     }
 
-    .task-box {
-      background: #f7fff9;
-      border: 3px solid #d7f2df;
+    .task-area {
+      background: #fafbf8;
+      border: 2px solid var(--line);
       border-radius: 28px;
-      padding: 24px;
-      text-align: center;
-      margin: 16px 0;
-    }
-
-    .story {
-      font-size: clamp(1.4rem, 4vw, 2.2rem);
-      font-weight: 800;
-      margin: 8px 0 16px;
-    }
-
-    .math {
-      font-size: clamp(2.2rem, 8vw, 4rem);
-      font-weight: 900;
-      color: var(--dark);
-      margin: 14px 0;
-    }
-
-    .answer-row {
+      padding: 26px;
+      min-height: 500px;
       display: flex;
-      gap: 12px;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .task-text {
+      text-align: center;
+      font-size: clamp(1.5rem, 4vw, 2.5rem);
+      font-weight: 850;
+      line-height: 1.25;
+      margin: 4px 0 14px;
+    }
+
+    .math-text {
+      text-align: center;
+      font-size: clamp(2.5rem, 7vw, 5rem);
+      font-weight: 900;
+      line-height: 1;
+      margin: 10px 0 18px;
+      color: var(--green);
+    }
+
+    .visual {
+      display: flex;
       justify-content: center;
       align-items: center;
       flex-wrap: wrap;
-      margin-top: 18px;
+      gap: 10px;
+      margin: 10px auto 18px;
+      max-width: 850px;
+    }
+
+    .ball,
+    .mini-ball {
+      width: 58px;
+      height: 58px;
+      border-radius: 999px;
+      border: 3px solid #cdd5cc;
+      background: white;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.65rem;
+      user-select: none;
+    }
+
+    .ball {
+      cursor: pointer;
+    }
+
+    .ball.selected {
+      border: 5px solid var(--green);
+      background: var(--green-soft);
+    }
+
+    .mini-ball {
+      width: 42px;
+      height: 42px;
+      font-size: 1.25rem;
+    }
+
+    .mini-ball.crossed {
+      opacity: 0.4;
+      position: relative;
+    }
+
+    .mini-ball.crossed::after {
+      content: "";
+      position: absolute;
+      width: 48px;
+      height: 4px;
+      border-radius: 999px;
+      background: #b34a4a;
+      transform: rotate(-35deg);
+    }
+
+    .ten-box {
+      min-width: 86px;
+      height: 58px;
+      border-radius: 16px;
+      background: var(--blue-soft);
+      border: 2px solid #c8d6e5;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      font-weight: 850;
+    }
+
+    .money-note,
+    .money-coin {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 850;
+      border: 2px solid #d6c27a;
+      background: #fff6cf;
+    }
+
+    .money-note {
+      width: 90px;
+      height: 52px;
+      border-radius: 12px;
+      font-size: 1.1rem;
+    }
+
+    .money-coin {
+      width: 54px;
+      height: 54px;
+      border-radius: 999px;
+      font-size: 1rem;
+    }
+
+    .answer-area {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 8px;
     }
 
     input[type="number"] {
-      width: min(100%, 260px);
-      font-size: 2.4rem;
-      text-align: center;
-      border: 4px solid #ccebd5;
+      width: 180px;
+      height: 76px;
+      border: 3px solid var(--line);
       border-radius: 22px;
-      padding: 14px;
-      font-weight: 800;
       background: white;
+      text-align: center;
+      font-size: 2.6rem;
+      font-weight: 900;
+      color: var(--text);
     }
 
     input[type="number"]:focus {
-      outline: 4px solid #a7f3d0;
+      outline: 4px solid #cfe5d6;
     }
 
     .number-pad {
+      width: min(100%, 440px);
+      margin: 16px auto 0;
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 10px;
-      margin-top: 18px;
-      max-width: 430px;
-      margin-left: auto;
-      margin-right: auto;
     }
 
     .number-pad button {
-      font-size: 1.8rem;
-      min-height: 70px;
-      background: #eefbf2;
-      border: 2px solid #ccebd5;
+      min-height: 66px;
+      font-size: 1.75rem;
+      background: white;
+      border: 2px solid var(--line);
     }
 
     .feedback {
-      min-height: 56px;
-      margin-top: 14px;
-      font-size: 1.5rem;
-      font-weight: 800;
+      min-height: 44px;
       text-align: center;
+      font-size: 1.35rem;
+      font-weight: 850;
+      margin-top: 12px;
     }
 
     .feedback.good {
@@ -246,613 +371,555 @@
     }
 
     .feedback.try {
-      color: #c47a00;
+      color: #8a5a00;
     }
 
-    .help-panel {
+    .help {
       display: none;
-      margin-top: 18px;
-      background: #fffdf0;
-      border: 3px solid #ffe39a;
-      border-radius: 24px;
+      margin-top: 16px;
       padding: 18px;
+      border-radius: 22px;
+      background: var(--yellow-soft);
+      border: 2px solid #ead99b;
+      font-size: 1.15rem;
     }
 
-    .help-panel.show {
+    .help.show {
       display: block;
     }
 
-    .help-title {
-      font-size: 1.4rem;
-      font-weight: 900;
-      margin-bottom: 12px;
-      color: #795a00;
+    .help strong {
+      color: #5f4800;
     }
 
-    .visual-row {
+    .bottom-row {
       display: flex;
+      justify-content: center;
+      gap: 12px;
       flex-wrap: wrap;
-      gap: 10px;
-      justify-content: center;
-      margin: 12px 0;
+      margin-top: 16px;
     }
 
-    .icon {
-      width: 44px;
-      height: 44px;
-      border-radius: 50%;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      background: white;
-      border: 2px solid #d1d5db;
-      font-size: 1.55rem;
-      position: relative;
-    }
-
-    .icon.cross::after {
-      content: "";
-      position: absolute;
-      width: 54px;
-      height: 5px;
-      background: var(--red);
-      transform: rotate(-35deg);
-      border-radius: 99px;
-    }
-
-    .ten-block {
-      min-width: 92px;
-      min-height: 64px;
-      padding: 8px;
-      border-radius: 18px;
-      background: #e0f2fe;
-      border: 3px solid #7dd3fc;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      flex-direction: column;
-      font-weight: 900;
-      color: #075985;
-    }
-
-    .coin {
-      width: 54px;
-      height: 54px;
-      border-radius: 50%;
-      background: #ffe08a;
-      border: 3px solid #d49b00;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 900;
-      font-size: 1.1rem;
-    }
-
-    .note {
-      width: 88px;
-      height: 48px;
-      border-radius: 12px;
-      background: #a7f3d0;
-      border: 3px solid #34d399;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 900;
-      font-size: 1.1rem;
-    }
-
-    .progress {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 8px;
-      margin-top: 14px;
-    }
-
-    @media (min-width: 650px) {
-      .progress {
-        grid-template-columns: repeat(3, 1fr);
-      }
-    }
-
-    .progress-item {
-      background: #f3f4f6;
-      border-radius: 18px;
-      padding: 12px;
+    .quiet-note {
+      margin-top: 16px;
+      color: var(--muted);
+      font-size: 1rem;
       text-align: center;
-      font-weight: 800;
     }
 
-    .footer-note {
-      margin-top: 14px;
-      text-align: center;
-      color: #52665b;
-      font-size: 0.95rem;
+    .hidden {
+      display: none;
     }
   </style>
 </head>
 
 <body>
   <main class="app">
-    <header>
-      <h1>⚽ Fußball-Mathe</h1>
-      <p class="subtitle">Rechnen mit Bällen, Bussen, Stadien und Fan-Shop</p>
-    </header>
 
-    <!-- Startmenü -->
-    <section id="menu" class="screen active">
+    <section id="menuScreen" class="screen active">
+      <header>
+        <h1>Fußball-Mathe</h1>
+        <p class="subtitle">Ruhig üben. Ohne Zeitdruck.</p>
+      </header>
+
       <div class="card">
-        <h2>Was möchtest du üben?</h2>
+        <h2>Wähle eine Übung aus</h2>
 
         <div class="menu-grid">
-          <button class="big-button primary" onclick="startGame('plus')">
-            <span style="font-size:2.5rem;">⚽➕⚽</span>
-            Plus rechnen
-            <small>bis 100</small>
+          <button class="menu-button soft-green" onclick="startMode('circle')">
+            <span class="menu-icon">⚽</span>
+            <span class="menu-title">Bälle einkreisen</span>
+            <span class="menu-sub">Zählen und antippen</span>
           </button>
 
-          <button class="big-button yellow" onclick="startGame('minus')">
-            <span style="font-size:2.5rem;">🚌➖👧</span>
-            Minus rechnen
-            <small>bis 100</small>
+          <button class="menu-button soft-blue" onclick="startMode('plus')">
+            <span class="menu-icon">⚽ + ⚽</span>
+            <span class="menu-title">Plus</span>
+            <span class="menu-sub">Zusammenrechnen</span>
           </button>
 
-          <button class="big-button blue" onclick="startGame('money')">
-            <span style="font-size:2.5rem;">🏟️💶</span>
-            Rechnen mit Euro
-            <small>ganze Euro-Beträge</small>
+          <button class="menu-button soft-blue" onclick="startMode('minus')">
+            <span class="menu-icon">🚌 − ⚽</span>
+            <span class="menu-title">Minus</span>
+            <span class="menu-sub">Wegnehmen</span>
+          </button>
+
+          <button class="menu-button soft-yellow" onclick="startMode('missing')">
+            <span class="menu-icon">🚩 ?</span>
+            <span class="menu-title">Fehlende Zahl</span>
+            <span class="menu-sub">Was fehlt?</span>
+          </button>
+
+          <button class="menu-button soft-yellow" onclick="startMode('moneyAdd')">
+            <span class="menu-icon">💶 + 💶</span>
+            <span class="menu-title">Euro zusammen</span>
+            <span class="menu-sub">Fan-Shop</span>
+          </button>
+
+          <button class="menu-button soft-yellow" onclick="startMode('change')">
+            <span class="menu-icon">👕 💶</span>
+            <span class="menu-title">Wechselgeld</span>
+            <span class="menu-sub">Bezahlen und zurückbekommen</span>
           </button>
         </div>
 
-        <p class="footer-note">
-          Kein Zeitdruck. Du kannst immer auf <strong>Hilfe</strong> tippen.
+        <p class="quiet-note">
+          Die Schwierigkeit steigt langsam: 10, 11, 12 …
         </p>
       </div>
     </section>
 
-    <!-- Spielbildschirm -->
-    <section id="game" class="screen">
+    <section id="gameScreen" class="screen">
+      <div class="topbar">
+        <button class="small" onclick="goMenu()">← Auswahl</button>
+
+        <div class="badge-row">
+          <span class="badge" id="modeBadge">Übung</span>
+          <span class="badge" id="rangeBadge">ZR bis 10</span>
+          <span class="badge" id="streakBadge">Serie: 0</span>
+        </div>
+      </div>
+
       <div class="card">
-        <div class="topbar">
-          <button class="small" onclick="goMenu()">⬅ Menü</button>
-          <span class="badge" id="modeBadge">⚽ Plus</span>
-          <span class="badge" id="levelBadge">Level 1</span>
-        </div>
-
-        <div class="task-box">
-          <div class="story" id="story">Aufgabe</div>
-          <div class="math" id="mathText">1 + 1 = ?</div>
-
-          <div class="answer-row">
-            <input
-              id="answer"
-              type="number"
-              inputmode="numeric"
-              pattern="[0-9]*"
-              aria-label="Antwort eingeben"
-              placeholder="?"
-            />
-            <button class="primary" onclick="checkAnswer()">Prüfen</button>
+        <div class="task-area">
+          <div>
+            <div id="taskText" class="task-text"></div>
+            <div id="mathText" class="math-text"></div>
+            <div id="visual" class="visual"></div>
           </div>
 
-          <div class="number-pad" aria-label="Zahlenfeld">
-            <button onclick="pressNum('1')">1</button>
-            <button onclick="pressNum('2')">2</button>
-            <button onclick="pressNum('3')">3</button>
-            <button onclick="pressNum('4')">4</button>
-            <button onclick="pressNum('5')">5</button>
-            <button onclick="pressNum('6')">6</button>
-            <button onclick="pressNum('7')">7</button>
-            <button onclick="pressNum('8')">8</button>
-            <button onclick="pressNum('9')">9</button>
-            <button onclick="clearAnswer()">⌫</button>
-            <button onclick="pressNum('0')">0</button>
-            <button onclick="checkAnswer()">✅</button>
+          <div>
+            <div id="inputArea" class="answer-area">
+              <input
+                id="answerInput"
+                type="number"
+                inputmode="numeric"
+                pattern="[0-9]*"
+                placeholder="?"
+                aria-label="Antwort"
+              />
+              <button class="primary" onclick="checkAnswer()">Prüfen</button>
+            </div>
+
+            <div id="pad" class="number-pad">
+              <button onclick="pressNumber('1')">1</button>
+              <button onclick="pressNumber('2')">2</button>
+              <button onclick="pressNumber('3')">3</button>
+              <button onclick="pressNumber('4')">4</button>
+              <button onclick="pressNumber('5')">5</button>
+              <button onclick="pressNumber('6')">6</button>
+              <button onclick="pressNumber('7')">7</button>
+              <button onclick="pressNumber('8')">8</button>
+              <button onclick="pressNumber('9')">9</button>
+              <button onclick="deleteNumber()">⌫</button>
+              <button onclick="pressNumber('0')">0</button>
+              <button onclick="checkAnswer()">✓</button>
+            </div>
+
+            <div id="circleCheckArea" class="answer-area hidden">
+              <button class="primary" onclick="checkAnswer()">Fertig</button>
+            </div>
+
+            <div class="bottom-row">
+              <button onclick="toggleHelp()">Hilfe</button>
+              <button onclick="newTask()">Neue Aufgabe</button>
+            </div>
+
+            <div id="feedback" class="feedback"></div>
+
+            <div id="helpBox" class="help"></div>
           </div>
-
-          <div class="answer-row">
-            <button class="yellow" onclick="toggleHelp()">💡 Hilfe</button>
-            <button onclick="readTask()">🔊 Vorlesen</button>
-          </div>
-
-          <div id="feedback" class="feedback"></div>
-
-          <div id="helpPanel" class="help-panel">
-            <div class="help-title">Schau genau:</div>
-            <div id="helpContent"></div>
-          </div>
-        </div>
-
-        <div class="progress">
-          <div class="progress-item">⭐ Richtig: <span id="correctCount">0</span></div>
-          <div class="progress-item">🔥 Serie: <span id="streakCount">0</span></div>
-          <div class="progress-item">🎯 Aufgabe: <span id="taskCount">0</span></div>
         </div>
       </div>
     </section>
+
   </main>
 
   <script>
-    const screens = {
-      menu: document.getElementById("menu"),
-      game: document.getElementById("game")
-    };
+    const menuScreen = document.getElementById("menuScreen");
+    const gameScreen = document.getElementById("gameScreen");
 
-    const storyEl = document.getElementById("story");
-    const mathTextEl = document.getElementById("mathText");
-    const answerEl = document.getElementById("answer");
-    const feedbackEl = document.getElementById("feedback");
-    const helpPanel = document.getElementById("helpPanel");
-    const helpContent = document.getElementById("helpContent");
     const modeBadge = document.getElementById("modeBadge");
-    const levelBadge = document.getElementById("levelBadge");
+    const rangeBadge = document.getElementById("rangeBadge");
+    const streakBadge = document.getElementById("streakBadge");
 
-    const correctCountEl = document.getElementById("correctCount");
-    const streakCountEl = document.getElementById("streakCount");
-    const taskCountEl = document.getElementById("taskCount");
+    const taskText = document.getElementById("taskText");
+    const mathText = document.getElementById("mathText");
+    const visual = document.getElementById("visual");
+
+    const answerInput = document.getElementById("answerInput");
+    const inputArea = document.getElementById("inputArea");
+    const pad = document.getElementById("pad");
+    const circleCheckArea = document.getElementById("circleCheckArea");
+
+    const feedback = document.getElementById("feedback");
+    const helpBox = document.getElementById("helpBox");
 
     let mode = "plus";
-    let level = 1;
-
-    let currentTask = null;
-
-    let correctTotal = 0;
+    let range = 10;
+    let currentAnswer = 0;
     let correctStreak = 0;
     let wrongStreak = 0;
-    let taskTotal = 0;
 
-    const levelMax = {
-      1: 10,
-      2: 20,
-      3: 50,
-      4: 100
-    };
+    const minRange = 5;
+    const maxRangeDefault = 100;
+    const maxRangeCircle = 30;
 
     const modeNames = {
-      plus: "⚽ Plus",
-      minus: "🚌 Minus",
-      money: "💶 Euro"
+      circle: "Bälle einkreisen",
+      plus: "Plus",
+      minus: "Minus",
+      missing: "Fehlende Zahl",
+      moneyAdd: "Euro zusammen",
+      change: "Wechselgeld"
     };
 
-    const footballThings = [
-      "Fußbälle",
-      "Fähnchen",
-      "Trikots",
-      "Schals",
-      "Tore",
-      "Hütchen"
-    ];
-
-    function startGame(selectedMode) {
+    function startMode(selectedMode) {
       mode = selectedMode;
-      level = 1;
-
-      correctTotal = 0;
+      range = 10;
       correctStreak = 0;
       wrongStreak = 0;
-      taskTotal = 0;
 
-      screens.menu.classList.remove("active");
-      screens.game.classList.add("active");
+      menuScreen.classList.remove("active");
+      gameScreen.classList.add("active");
 
-      modeBadge.textContent = modeNames[mode];
-      updateStats();
       newTask();
     }
 
     function goMenu() {
-      screens.game.classList.remove("active");
-      screens.menu.classList.add("active");
-      stopSpeech();
+      gameScreen.classList.remove("active");
+      menuScreen.classList.add("active");
     }
 
-    function updateStats() {
-      correctCountEl.textContent = correctTotal;
-      streakCountEl.textContent = correctStreak;
-      taskCountEl.textContent = taskTotal;
-      levelBadge.textContent = "Level " + level + " · bis " + levelMax[level];
+    function updateBadges() {
+      modeBadge.textContent = modeNames[mode];
+      rangeBadge.textContent = "ZR bis " + range;
+      streakBadge.textContent = "Serie: " + correctStreak;
+    }
+
+    function maxForMode() {
+      if (mode === "circle") return maxRangeCircle;
+      return maxRangeDefault;
     }
 
     function randomInt(min, max) {
       return Math.floor(Math.random() * (max - min + 1)) + min;
     }
 
-    function pick(arr) {
-      return arr[Math.floor(Math.random() * arr.length)];
+    function pick(list) {
+      return list[Math.floor(Math.random() * list.length)];
     }
 
     function newTask() {
-      helpPanel.classList.remove("show");
-      feedbackEl.textContent = "";
-      feedbackEl.className = "feedback";
-      answerEl.value = "";
+      feedback.textContent = "";
+      feedback.className = "feedback";
+      helpBox.classList.remove("show");
+      helpBox.innerHTML = "";
+      answerInput.value = "";
+      visual.innerHTML = "";
+      mathText.textContent = "";
 
-      if (mode === "plus") {
-        currentTask = makePlusTask();
+      if (mode === "circle") makeCircleTask();
+      if (mode === "plus") makePlusTask();
+      if (mode === "minus") makeMinusTask();
+      if (mode === "missing") makeMissingTask();
+      if (mode === "moneyAdd") makeMoneyAddTask();
+      if (mode === "change") makeChangeTask();
+
+      updateBadges();
+
+      if (mode !== "circle") {
+        setTimeout(() => answerInput.focus(), 100);
+      }
+    }
+
+    function showInputTask() {
+      inputArea.classList.remove("hidden");
+      pad.classList.remove("hidden");
+      circleCheckArea.classList.add("hidden");
+    }
+
+    function showCircleTask() {
+      inputArea.classList.add("hidden");
+      pad.classList.add("hidden");
+      circleCheckArea.classList.remove("hidden");
+    }
+
+    function makeCircleTask() {
+      showCircleTask();
+
+      const total = Math.min(range, maxRangeCircle);
+      const target = randomInt(1, total);
+
+      currentAnswer = target;
+
+      taskText.textContent = "Kreise " + target + " Fußbälle ein.";
+      mathText.textContent = "";
+
+      for (let i = 0; i < total; i++) {
+        const ball = document.createElement("button");
+        ball.className = "ball";
+        ball.textContent = "⚽";
+        ball.setAttribute("aria-label", "Fußball");
+        ball.onclick = function () {
+          ball.classList.toggle("selected");
+        };
+        visual.appendChild(ball);
       }
 
-      if (mode === "minus") {
-        currentTask = makeMinusTask();
-      }
-
-      if (mode === "money") {
-        currentTask = makeMoneyTask();
-      }
-
-      storyEl.textContent = currentTask.story;
-      mathTextEl.textContent = currentTask.math;
-      helpContent.innerHTML = currentTask.help;
-
-      setTimeout(() => answerEl.focus(), 100);
-      updateStats();
+      helpBox.innerHTML = `
+        <p><strong>Tippe genau ${target} Fußbälle an.</strong></p>
+        <p>Jeder angetippte Ball bekommt einen grünen Kreis.</p>
+      `;
     }
 
     function makePlusTask() {
-      const max = levelMax[level];
-      let a = randomInt(1, Math.max(2, Math.floor(max / 2)));
-      let b = randomInt(1, max - a);
-      const thing = pick(footballThings);
+      showInputTask();
 
-      return {
-        answer: a + b,
-        story: `Im Training liegen ${a} ${thing}. Dann kommen ${b} dazu.`,
-        math: `${a} + ${b} = ?`,
-        speak: `Im Training liegen ${a} ${thing}. Dann kommen ${b} dazu. Wie viele sind es zusammen?`,
-        help: `
-          <p><strong>Plus heißt: zusammenlegen.</strong></p>
-          <p>Erst ${a}, dann ${b} dazu.</p>
-          ${visualNumber(a, "⚽")}
-          <div style="font-size:2rem;font-weight:900;">+</div>
-          ${visualNumber(b, "⚽")}
-          <div style="font-size:2rem;font-weight:900;">= zusammen zählen</div>
-        `
-      };
+      const a = randomInt(1, range - 1);
+      const b = randomInt(1, range - a);
+
+      currentAnswer = a + b;
+
+      taskText.textContent = "Im Training liegen erst " + a + " Bälle. Dann kommen " + b + " Bälle dazu.";
+      mathText.textContent = a + " + " + b + " = ?";
+      visual.innerHTML = visualNumber(a, "⚽") + visualSign("+") + visualNumber(b, "⚽");
+
+      helpBox.innerHTML = `
+        <p><strong>Plus bedeutet: zusammenlegen.</strong></p>
+        <p>Zähle erst ${a}. Dann zähle ${b} dazu.</p>
+      `;
     }
 
     function makeMinusTask() {
-      const max = levelMax[level];
-      let a = randomInt(2, max);
-      let b = randomInt(1, a - 1);
+      showInputTask();
 
-      const stories = [
-        {
-          story: `Im Mannschaftsbus sitzen ${a} Fans. ${b} Fans steigen aus.`,
-          item: "🚌",
-          speak: `Im Mannschaftsbus sitzen ${a} Fans. ${b} Fans steigen aus. Wie viele Fans bleiben im Bus?`
-        },
-        {
-          story: `Im Stadion hängen ${a} Fähnchen. ${b} werden abgenommen.`,
-          item: "🚩",
-          speak: `Im Stadion hängen ${a} Fähnchen. ${b} werden abgenommen. Wie viele Fähnchen bleiben?`
-        },
-        {
-          story: `Die Mannschaft hat ${a} Bälle. ${b} Bälle werden weggeräumt.`,
-          item: "⚽",
-          speak: `Die Mannschaft hat ${a} Bälle. ${b} Bälle werden weggeräumt. Wie viele Bälle bleiben?`
-        }
-      ];
+      const a = randomInt(2, range);
+      const b = randomInt(1, a - 1);
 
-      const s = pick(stories);
+      currentAnswer = a - b;
 
-      return {
-        answer: a - b,
-        story: s.story,
-        math: `${a} − ${b} = ?`,
-        speak: s.speak,
-        help: `
-          <p><strong>Minus heißt: etwas wegnehmen.</strong></p>
-          <p>Starte mit ${a}. Streiche ${b} weg.</p>
-          ${visualMinus(a, b, s.item)}
-          <div style="font-size:2rem;font-weight:900;">Übrig bleibt die Antwort.</div>
-        `
-      };
+      const story = pick([
+        "Im Mannschaftsbus sitzen " + a + " Fans. " + b + " Fans steigen aus.",
+        "Im Stadion hängen " + a + " Fähnchen. " + b + " Fähnchen werden abgenommen.",
+        "Die Mannschaft hat " + a + " Bälle. " + b + " Bälle werden weggeräumt."
+      ]);
+
+      taskText.textContent = story;
+      mathText.textContent = a + " − " + b + " = ?";
+      visual.innerHTML = visualMinus(a, b);
+
+      helpBox.innerHTML = `
+        <p><strong>Minus bedeutet: wegnehmen.</strong></p>
+        <p>Starte bei ${a}. Nimm ${b} weg. Zähle, was übrig bleibt.</p>
+      `;
     }
 
-    function makeMoneyTask() {
-      const max = levelMax[level];
+    function makeMissingTask() {
+      showInputTask();
 
-      if (level <= 2) {
-        let a = randomInt(1, Math.max(2, Math.floor(max / 2)));
-        let b = randomInt(1, max - a);
+      const total = randomInt(2, range);
+      const there = randomInt(1, total - 1);
 
-        return {
-          answer: a + b,
-          story: `Im Fan-Shop kostet ein Schal ${a} €. Ein Fähnchen kostet ${b} €.` ,
-          math: `${a} € + ${b} € = ?`,
-          speak: `Im Fan-Shop kostet ein Schal ${a} Euro. Ein Fähnchen kostet ${b} Euro. Wie viel kostet es zusammen?`,
-          help: `
-            <p><strong>Lege das Geld zusammen.</strong></p>
-            <p>${a} € und ${b} €.</p>
-            ${visualMoney(a)}
-            <div style="font-size:2rem;font-weight:900;">+</div>
-            ${visualMoney(b)}
-          `
-        };
-      } else {
-        let price = randomInt(5, Math.min(70, max - 1));
-        let paidOptions = [10, 20, 50, 100].filter(x => x > price && x <= max);
-        let paid = paidOptions.length ? pick(paidOptions) : max;
+      currentAnswer = total - there;
 
-        return {
-          answer: paid - price,
-          story: `Du kaufst ein Trikot für ${price} €. Du bezahlst mit ${paid} €.` ,
-          math: `${paid} € − ${price} € = ?`,
-          speak: `Du kaufst ein Trikot für ${price} Euro. Du bezahlst mit ${paid} Euro. Wie viel Euro bekommst du zurück?`,
-          help: `
-            <p><strong>Wechselgeld: Bezahlt minus Preis.</strong></p>
-            <p>Du hast ${paid} €. Das Trikot kostet ${price} €.</p>
-            ${visualMoney(paid)}
-            <div style="font-size:2rem;font-weight:900;">− ${price} €</div>
-            <p>Zähle, was übrig bleibt.</p>
-          `
-        };
-      }
+      taskText.textContent = "Im Stadion sollen " + total + " Fähnchen hängen. Es hängen schon " + there + ".";
+      mathText.textContent = there + " + ? = " + total;
+      visual.innerHTML = visualNumber(there, "🚩") + visualSign("+ ?") + visualSign("=") + visualNumber(total, "🚩");
+
+      helpBox.innerHTML = `
+        <p><strong>Was fehlt bis ${total}?</strong></p>
+        <p>Zähle von ${there} weiter bis ${total}.</p>
+      `;
+    }
+
+    function makeMoneyAddTask() {
+      showInputTask();
+
+      const a = randomInt(1, range - 1);
+      const b = randomInt(1, range - a);
+
+      currentAnswer = a + b;
+
+      taskText.textContent = "Ein Schal kostet " + a + " €. Ein Fähnchen kostet " + b + " €.";
+      mathText.textContent = a + " € + " + b + " € = ?";
+      visual.innerHTML = visualMoney(a) + visualSign("+") + visualMoney(b);
+
+      helpBox.innerHTML = `
+        <p><strong>Lege die Euro-Beträge zusammen.</strong></p>
+        <p>${a} € und ${b} € gehören zusammen.</p>
+      `;
+    }
+
+    function makeChangeTask() {
+      showInputTask();
+
+      const paid = randomInt(2, range);
+      const price = randomInt(1, paid - 1);
+
+      currentAnswer = paid - price;
+
+      taskText.textContent = "Du kaufst im Fan-Shop etwas für " + price + " €. Du bezahlst mit " + paid + " €.";
+      mathText.textContent = paid + " € − " + price + " € = ?";
+      visual.innerHTML = visualMoney(paid) + visualSign("− " + price + " €");
+
+      helpBox.innerHTML = `
+        <p><strong>Wechselgeld bedeutet: bezahlt minus Preis.</strong></p>
+        <p>Rechne: ${paid} € − ${price} €.</p>
+      `;
+    }
+
+    function visualSign(sign) {
+      return `<div class="ten-box">${sign}</div>`;
     }
 
     function visualNumber(number, symbol) {
+      if (number <= 20) {
+        let html = "";
+        for (let i = 0; i < number; i++) {
+          html += `<span class="mini-ball">${symbol}</span>`;
+        }
+        return html;
+      }
+
       const tens = Math.floor(number / 10);
       const ones = number % 10;
-
-      let html = `<div class="visual-row">`;
+      let html = "";
 
       for (let i = 0; i < tens; i++) {
-        html += `<div class="ten-block"><span>10</span><span>${symbol}${symbol}</span></div>`;
+        html += `<span class="ten-box">10</span>`;
       }
 
       for (let i = 0; i < ones; i++) {
-        html += `<span class="icon">${symbol}</span>`;
-      }
-
-      html += `</div>`;
-
-      if (number >= 10) {
-        html += `<p><strong>${tens}</strong> Zehner und <strong>${ones}</strong> Einer = <strong>${number}</strong></p>`;
+        html += `<span class="mini-ball">${symbol}</span>`;
       }
 
       return html;
     }
 
-    function visualMinus(start, takeAway, symbol) {
-      const showAll = start <= 30;
-
-      if (showAll) {
-        let html = `<div class="visual-row">`;
+    function visualMinus(start, takeAway) {
+      if (start <= 20) {
+        let html = "";
 
         for (let i = 1; i <= start; i++) {
-          const crossed = i <= takeAway ? "cross" : "";
-          html += `<span class="icon ${crossed}">${symbol}</span>`;
+          const crossed = i <= takeAway ? "crossed" : "";
+          html += `<span class="mini-ball ${crossed}">⚽</span>`;
         }
 
-        html += `</div>`;
         return html;
       }
 
-      return `
-        <p>Die Zahl ist groß. Nutze Zehner und Einer.</p>
-        ${visualNumber(start, symbol)}
-        <p><strong>Davon ${takeAway} wegnehmen.</strong></p>
-      `;
+      return visualNumber(start, "⚽") + visualSign("− " + takeAway);
     }
 
     function visualMoney(amount) {
-      const fifties = Math.floor(amount / 50);
-      amount = amount % 50;
+      let html = "";
 
-      const twenties = Math.floor(amount / 20);
-      amount = amount % 20;
+      const notes = [50, 20, 10, 5];
 
-      const tens = Math.floor(amount / 10);
-      amount = amount % 10;
+      for (const note of notes) {
+        while (amount >= note) {
+          html += `<span class="money-note">${note} €</span>`;
+          amount -= note;
+        }
+      }
 
-      const fives = Math.floor(amount / 5);
-      amount = amount % 5;
+      while (amount >= 1) {
+        html += `<span class="money-coin">1 €</span>`;
+        amount -= 1;
+      }
 
-      const ones = amount;
-
-      let html = `<div class="visual-row">`;
-
-      for (let i = 0; i < fifties; i++) html += `<span class="note">50 €</span>`;
-      for (let i = 0; i < twenties; i++) html += `<span class="note">20 €</span>`;
-      for (let i = 0; i < tens; i++) html += `<span class="note">10 €</span>`;
-      for (let i = 0; i < fives; i++) html += `<span class="note">5 €</span>`;
-      for (let i = 0; i < ones; i++) html += `<span class="coin">1 €</span>`;
-
-      html += `</div>`;
       return html;
     }
 
     function checkAnswer() {
-      const value = Number(answerEl.value);
+      let userAnswer;
 
-      if (answerEl.value.trim() === "") {
-        feedbackEl.textContent = "Gib zuerst eine Zahl ein.";
-        feedbackEl.className = "feedback try";
-        return;
+      if (mode === "circle") {
+        userAnswer = document.querySelectorAll(".ball.selected").length;
+      } else {
+        if (answerInput.value.trim() === "") {
+          feedback.textContent = "Gib eine Zahl ein.";
+          feedback.className = "feedback try";
+          return;
+        }
+
+        userAnswer = Number(answerInput.value);
       }
 
-      taskTotal++;
-
-      if (value === currentTask.answer) {
-        correctTotal++;
+      if (userAnswer === currentAnswer) {
         correctStreak++;
         wrongStreak = 0;
 
-        feedbackEl.textContent = pick([
-          "Tor! Richtig! ⚽",
-          "Stark gespielt! ✅",
-          "Super gerechnet! ⭐",
-          "Volltreffer! 🥅"
+        feedback.textContent = pick([
+          "Richtig.",
+          "Gut gerechnet.",
+          "Das stimmt.",
+          "Sehr gut."
         ]);
-        feedbackEl.className = "feedback good";
+        feedback.className = "feedback good";
 
-        if (correctStreak >= 20 && level < 4) {
-          level++;
+        if (correctStreak >= 20) {
+          increaseRange();
           correctStreak = 0;
-          feedbackEl.textContent = "Klasse! Du steigst ein Level auf! 🏆";
+          feedback.textContent = "Sehr gut. Jetzt wird es ein kleines bisschen schwerer.";
         }
 
-        updateStats();
+        updateBadges();
 
-        setTimeout(newTask, 1100);
+        setTimeout(newTask, 900);
       } else {
         wrongStreak++;
         correctStreak = 0;
 
-        feedbackEl.textContent = "Fast! Schau dir die Hilfe an und versuche es nochmal.";
-        feedbackEl.className = "feedback try";
-        helpPanel.classList.add("show");
+        feedback.textContent = "Noch nicht. Schau auf die Hilfe.";
+        feedback.className = "feedback try";
+        helpBox.classList.add("show");
 
-        if (wrongStreak >= 5 && level > 1) {
-          level--;
+        if (wrongStreak >= 5) {
+          decreaseRange();
           wrongStreak = 0;
-          feedbackEl.textContent = "Wir machen es etwas leichter. Du schaffst das! 💪";
+          feedback.textContent = "Wir machen es ein kleines bisschen leichter.";
         }
 
-        updateStats();
+        updateBadges();
+      }
+    }
+
+    function increaseRange() {
+      const max = maxForMode();
+      if (range < max) {
+        range = range + 1;
+      }
+    }
+
+    function decreaseRange() {
+      if (range > minRange) {
+        range = range - 1;
       }
     }
 
     function toggleHelp() {
-      helpPanel.classList.toggle("show");
+      helpBox.classList.toggle("show");
     }
 
-    function pressNum(num) {
-      if (answerEl.value.length < 3) {
-        answerEl.value += num;
+    function pressNumber(number) {
+      if (answerInput.value.length < 3) {
+        answerInput.value += number;
       }
-      answerEl.focus();
+      answerInput.focus();
     }
 
-    function clearAnswer() {
-      answerEl.value = answerEl.value.slice(0, -1);
-      answerEl.focus();
+    function deleteNumber() {
+      answerInput.value = answerInput.value.slice(0, -1);
+      answerInput.focus();
     }
 
-    answerEl.addEventListener("keydown", function(event) {
+    answerInput.addEventListener("keydown", function(event) {
       if (event.key === "Enter") {
         checkAnswer();
       }
     });
-
-    function readTask() {
-      stopSpeech();
-
-      if (!("speechSynthesis" in window)) {
-        feedbackEl.textContent = "Vorlesen ist auf diesem Gerät nicht verfügbar.";
-        feedbackEl.className = "feedback try";
-        return;
-      }
-
-      const utterance = new SpeechSynthesisUtterance(currentTask.speak);
-      utterance.lang = "de-DE";
-      utterance.rate = 0.9;
-      window.speechSynthesis.speak(utterance);
-    }
-
-    function stopSpeech() {
-      if ("speechSynthesis" in window) {
-        window.speechSynthesis.cancel();
-      }
-    }
   </script>
 </body>
 </html>
